@@ -40,7 +40,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/app.o \
 	${OBJECTDIR}/count.o \
 	${OBJECTDIR}/splitter.o \
-	${OBJECTDIR}/spout.o
+	${OBJECTDIR}/spout.o \
+	${OBJECTDIR}/utils.o
 
 
 # C Compiler Flags
@@ -61,11 +62,11 @@ LDLIBSOPTIONS=-L/usr/local/Cellar/zeromq/4.2.2/lib
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zeromq
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/minotaur
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zeromq: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/minotaur: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zeromq ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/minotaur ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/Client.o: Client.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -97,13 +98,18 @@ ${OBJECTDIR}/spout.o: spout.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/spout.o spout.cpp
 
+${OBJECTDIR}/utils.o: utils.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utils.o utils.cpp
+
 # Subprojects
 .build-subprojects:
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zeromq
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/minotaur
 
 # Subprojects
 .clean-subprojects:

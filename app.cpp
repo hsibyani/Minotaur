@@ -24,7 +24,7 @@ void * count(void *arg);
  */
 int main(int argc, char** argv) {
     
-    const int count_threads = 1;
+    const int count_threads = 2;
     const int split_threads = 2;
     const int spout_threads = 2;
     
@@ -33,33 +33,33 @@ int main(int argc, char** argv) {
     pthread_t count_t[count_threads];
     std::cout << "Starting the components…" << std::endl;
     
-//    struct arguments arg;
+//    struct Arguments arg;
     for (int j=0; j<spout_threads; j++){
-        arguments *arg = new arguments;
+        Arguments *arg = new Arguments;
         arg->id = j;
         arg->next_stage = split_threads;
         arg->prev_stage = 0;
         pthread_create(&spout_t[j], NULL, spout, (void*)arg);  
         sleep(1);
-        delete arg;
+        //delete arg;
     }
     for (int j=0; j<split_threads; j++){
-        arguments *arg = new arguments;
+        Arguments *arg = new Arguments;
         arg->id = j;
         arg->next_stage = count_threads;
         arg->prev_stage = spout_threads;
         pthread_create(&split_t[j], NULL, splitter, (void*)arg);
         sleep(1);
-        delete arg;
+        //delete arg;
     }
     for (int j=0; j<count_threads; j++){
-        arguments *arg = new arguments;
+        Arguments *arg = new Arguments;
         arg->id = j;
         arg->next_stage = 0;
         arg->prev_stage = split_threads;
         pthread_create(&count_t[j], NULL, count, (void*)arg);
         sleep(1);
-        delete arg;
+        //delete arg;
     }
     std::cout << "Started the components…" << std::endl;
     while(true){

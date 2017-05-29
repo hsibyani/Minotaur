@@ -12,7 +12,7 @@
 
 #endif	/* HELPER_HPP */
 
-struct arguments{
+struct Arguments{
     int id;
     int next_stage;
     int prev_stage;

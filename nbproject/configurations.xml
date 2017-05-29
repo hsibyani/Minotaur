@@ -7,6 +7,7 @@
       <itemPath>Client.h</itemPath>
       <itemPath>Server.h</itemPath>
       <itemPath>helper.hpp</itemPath>
+      <itemPath>utils.hpp</itemPath>
       <itemPath>zhelpers.hpp</itemPath>
       <itemPath>zmq.hpp</itemPath>
     </logicalFolder>
@@ -23,6 +24,7 @@
       <itemPath>count.cpp</itemPath>
       <itemPath>splitter.cpp</itemPath>
       <itemPath>spout.cpp</itemPath>
+      <itemPath>utils.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -76,6 +78,10 @@
       </item>
       <item path="spout.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="utils.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="zhelpers.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="zmq.hpp" ex="false" tool="3" flavor2="0">
@@ -118,6 +124,10 @@
       <item path="splitter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="spout.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="utils.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="zhelpers.hpp" ex="false" tool="3" flavor2="0">
       </item>
