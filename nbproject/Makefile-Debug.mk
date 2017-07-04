@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/count.o \
 	${OBJECTDIR}/splitter.o \
 	${OBJECTDIR}/spout.o \
+	${OBJECTDIR}/test.o \
 	${OBJECTDIR}/utils.o
 
 
@@ -97,6 +98,11 @@ ${OBJECTDIR}/spout.o: spout.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/spout.o spout.cpp
+
+${OBJECTDIR}/test.o: test.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/test.o test.cpp
 
 ${OBJECTDIR}/utils.o: utils.cpp 
 	${MKDIR} -p ${OBJECTDIR}

@@ -11,7 +11,7 @@
 #include "Client.h"
 #include <pthread.h>
 #include <unistd.h>
-#include "helper.hpp"
+#include "utils.hpp"
 
 
 //using namespace std;
@@ -24,9 +24,9 @@ void * count(void *arg);
  */
 int main(int argc, char** argv) {
     
-    const int count_threads = 2;
-    const int split_threads = 2;
-    const int spout_threads = 2;
+    const int count_threads = 1;
+    const int split_threads = 1;
+    const int spout_threads = 1;
     
     pthread_t spout_t[spout_threads];
     pthread_t split_t[split_threads];

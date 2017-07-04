@@ -6,7 +6,6 @@
                    projectFiles="true">
       <itemPath>Client.h</itemPath>
       <itemPath>Server.h</itemPath>
-      <itemPath>helper.hpp</itemPath>
       <itemPath>utils.hpp</itemPath>
       <itemPath>zhelpers.hpp</itemPath>
       <itemPath>zmq.hpp</itemPath>
@@ -18,12 +17,15 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>Client.cpp</itemPath>
-      <itemPath>Server.cpp</itemPath>
+      <logicalFolder name="f1" displayName="Old" projectFiles="true">
+        <itemPath>Client.cpp</itemPath>
+        <itemPath>Server.cpp</itemPath>
+      </logicalFolder>
       <itemPath>app.cpp</itemPath>
       <itemPath>count.cpp</itemPath>
       <itemPath>splitter.cpp</itemPath>
       <itemPath>spout.cpp</itemPath>
+      <itemPath>test.cpp</itemPath>
       <itemPath>utils.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -42,7 +44,7 @@
   <confs>
     <conf name="Debug" type="1">
       <toolsSet>
-        <compilerSet>default</compilerSet>
+        <compilerSet>GNU|GNU</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
@@ -72,11 +74,11 @@
       </item>
       <item path="count.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="helper.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="splitter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="spout.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="test.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="utils.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -119,11 +121,11 @@
       </item>
       <item path="count.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="helper.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="splitter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="spout.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="test.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="utils.cpp" ex="false" tool="1" flavor2="0">
       </item>

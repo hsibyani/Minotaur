@@ -3,10 +3,23 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream>
-#include "helper.hpp"
 #include "utils.hpp"
+//void execute(zmq::socket_t sender){
+//    
+//}
 
-#define within(num) (int) ((float) num * random () / (RAND_MAX + 1.0))
+// Needs to happen in enclave
+int enclave_shuffle_routing(int j, int n){
+    j++;
+    j = j% n;
+    return j;
+}
+
+// What needs to happen within the enclave?
+void enclave_execute(int* j, int* n){
+        *j = enclave_shuffle_routing(*j,*n);
+        //return j;
+}
 
 void* spout (void *arg)
 {
@@ -16,24 +29,23 @@ void* spout (void *arg)
     std::cout << "Sending tasks to workers…\n" << std::endl;
     zmq::message_t message(2);
 
-
     //  Initialize random number generator
     srandom ((unsigned) time (NULL));
     
-    std::string sentence ("Hello is it me you are looking for ?");
+    std::string sentence ("Hello is it me you are looking for?");
     int n = param->next_stage;
     int j = 0;
+    
     while(1){
-        j = j% n;
+         
+        enclave_execute(&j,&n);
+        
         int len = sentence.length()+std::to_string(j).length()+1;
         message.rebuild(len);
         
         sprintf((char *)message.data(),"%d %s",j,sentence.c_str());
-        //std::cout << "Sending "<<sentence << "to" << j<< std::endl;
-
-        j++;
         sender.send(message);
-        sleep(1);
+        //sleep(1);
     }
     return NULL;
 }

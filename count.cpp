@@ -3,8 +3,32 @@
 //#include "zmq.hpp"
 #include <string>
 #include <map>
-#include "helper.hpp"
 #include "utils.hpp"
+std::map<std::string, int> count_map;
+
+// TODO: Convert this string into char buffer
+void enclave_execute(std::string smessage) {
+
+    std::string word;
+    std::istringstream iss(smessage);
+    iss >> word;
+    //std::cout << word << std::endl;
+    iss >> word;
+    //std::cout << word << std::endl;
+    if (count_map.find(word) != count_map.end()) {
+        count_map[word] += 1;
+    } else {
+        count_map[word] = 1;
+    }
+    std::map<std::string, int > ::iterator it;
+    // Printing the counts
+    for (it = count_map.begin(); it != count_map.end(); it++) {
+        std::cout << it->first // string (key)
+                << ':'
+                << it->second // string's value 
+                << std::endl;
+    }
+}
 
 void* count(void *arg)
 {
@@ -14,34 +38,12 @@ void* count(void *arg)
     
     std::cout << "Starting the count worker " << std::endl;
     //  Process tasks forever
-    std::map<std::string, int> count_map;
-    while (1) {
-
+    while(1) {
         zmq::message_t message;
-        std::string word; 
         receiver.recv(&message);
         std::cout << "Message Received " << std::endl;
-        std::string smessage(static_cast<char*>(message.data()), message.size());
-        std::istringstream iss(smessage);
-        iss >> word;
-        //std::cout << word << std::endl;
-        iss >> word;
-        //std::cout << word << std::endl;
-        if (count_map.find(word) != count_map.end()){
-            count_map[word]+=1;
-        }else{
-            count_map[word] = 1;
-        }
-        std::map<std::string, int > ::iterator it;
-        // Printing the counts
-        for ( it = count_map.begin(); it != count_map.end(); it++ )
-        {
-            std::cout << it->first  // string (key)
-                      << ':'
-                      << it->second   // string's value 
-                      << std::endl ;
-        }
-
+        std::string smessage(static_cast<char*> (message.data()), message.size());
+        enclave_execute(smessage);
     }
     return NULL;
 }
