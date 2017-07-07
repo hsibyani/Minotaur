@@ -24,20 +24,22 @@ void enclave_execute(std::string smessage, int n, void *sender, StringArray** re
     unsigned int j = 0;
     iss >> word;
     int count = std::distance(std::istream_iterator<std::string>(iss >> std::ws), std::istream_iterator<std::string>());
-    std::cout << count << std::endl;
+    //std::cout << count << std::endl;
 
     //std::cout << "Allocating memory" << std::endl;
-    nc = &count; 
+    *nc = count; 
     *retmessage = (StringArray *) malloc(sizeof(StringArray));
     (*retmessage)->array = (char**) malloc(count * sizeof (char *));
+    //retlen = (int **) malloc(sizeof(int*)); 
     *retlen = (int *)malloc(count * sizeof (int));
-    std::cout<< sizeof((*retmessage)->array) << std::endl;
-    for (int x=0; x<count; x++){
-        std::cout << "Allocating space" << std::endl;
-        (*retmessage)->array[x] = (char *) malloc(count * sizeof(char));
-        std::cout << (*retmessage)->array[x] << std::endl;
-    }
+    //std::cout<< sizeof((*retmessage)->array) << std::endl;
+//    for (int x=0; x<count; x++){
+//        std::cout << "Allocating space" << std::endl;
+//        (*retmessage)->array[x] = (char *) malloc(count * sizeof(char));
+//        std::cout << (*retmessage)->array[x] << std::endl;
+//    }
         //std::cout<<"1" << (*retmessage)->array[x]<<std::endl;
+    //std::cout<< "Total elements " << count << std::endl;
     
     iss.clear();
     iss.seekg(0);
@@ -48,17 +50,20 @@ void enclave_execute(std::string smessage, int n, void *sender, StringArray** re
         std::hash<std::string> hasher;
         auto hashed = hasher(word);
         j = hashed % n;
-        *retlen[i] = word.length() + std::to_string(j).length() + 2;
-        std::cout << *retlen[i] << std::endl;
+        //std::cout << *retlen[i] << std::endl;
+//        std::cout << sizeof(int) << std::endl;
+//        std::cout << (*retlen)+i << std::endl;
+        *((*retlen)+i) = word.length() + std::to_string(j).length() + 2;
+        //*(*retlen+6) = 10;
+        //std::cout << *retlen[10] << std::endl;
         
-        //(*retmessage)->array[i] = (char *) malloc(*retlen[i] * sizeof(char));
-        std::cout << (*retmessage)->array[1] << std::endl;
-        std::cout << "Copy string to return message" << std::endl;
-        snprintf((*retmessage)->array[i], *retlen[i], "%d %s", j, word.c_str());
-        std::cout << (*retmessage)->array[i] << std::endl;
-        std::cout<< sizeof((*retmessage)->array) << std::endl;
+        (*retmessage)->array[i] = (char *) malloc(*((*retlen)+i) * sizeof(char));
+        //std::cout << (*retmessage)->array[1] << std::endl;
+        //std::cout << "Copy string to return message" << std::endl;
+        snprintf((*retmessage)->array[i], *((*retlen)+i), "%d %s", j, word.c_str());
+        //std::cout << (*retmessage)->array[i] << std::endl;
+        //std::cout<< sizeof((*retmessage)->array) << std::endl;
         i = i+1;
-        std::cout << i <<std::endl;
         //osend(message, sender);
     }
 }
@@ -95,10 +100,11 @@ void* splitter(void *arg) {
 
         enclave_execute(smessage, n, &sender, &retmessage, &retlen_a, &retlen);
 
+        std::cout << retlen << std::endl;
         for (int k = 0; k < retlen; k++) {
             message.rebuild(retlen_a[k]);
 
-            std::cout << retlen_a[k] << std::endl;
+            //std::cout << retlen_a[k] << std::endl;
             snprintf((char *) message.data(), retlen_a[k], "%s", retmessage->array[k]);
             sender.send(message);
             std::cout << retmessage->array[k] << std::endl;
