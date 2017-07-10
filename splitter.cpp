@@ -68,14 +68,15 @@ void enclave_execute(std::string smessage, int n, void *sender, StringArray** re
     }
 }
 
-void* splitter(void *arg) {
+void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort, 
+        std::vector<std::string> receiverIP, std::vector<int> receiverPort) {
     struct Arguments * param = (Arguments*) arg;
     zmq::context_t context(1);
     //zmq::context_t context = zmq_ctx_new();
-    zmq::socket_t sender = key_sender_conn(param, context, "127.0.0.1", 6000);
+    zmq::socket_t sender = key_sender_conn(param, context, senderIP, senderPort);
     std::cout << "Splitter: Received the sender socket " << std::endl;
 
-    zmq::socket_t receiver = shuffle_receiver_conn(param, context, "127.0.0.1", 5000);
+    zmq::socket_t receiver = shuffle_receiver_conn(param, context, receiverIP, receiverPort);
 
     std::cout << "Starting the splitter worker " << std::endl;
 
@@ -88,7 +89,8 @@ void* splitter(void *arg) {
         std::string word;
         receiver.recv(&message);
         std::string smessage(static_cast<char*> (message.data()), message.size());
-
+        
+        //std::cout << smessage << std::endl;
         std::istringstream iss(smessage);
 
         int n = param->next_stage;

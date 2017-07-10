@@ -12,13 +12,15 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "utils.hpp"
+#include <stdlib.h>
 
 
 //using namespace std;
 
-void * spout (void *arg);
-void * splitter (void *arg);
-void * count(void *arg);
+void* spout (void *arg, std::string ip, int port);
+void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort, 
+        std::vector<std::string> receiverIP, std::vector<int> receiverPort);
+void* count(void *arg, std::string receiverIP, int port);
 /*
  * 
  */
@@ -31,40 +33,81 @@ int main(int argc, char** argv) {
     pthread_t spout_t[spout_threads];
     pthread_t split_t[split_threads];
     pthread_t count_t[count_threads];
-    std::cout << "Starting the components…" << std::endl;
     
-//    struct Arguments arg;
-    for (int j=0; j<spout_threads; j++){
+    std::cout << argv[1] << std::endl;
+    if(strcmp(argv[1], "spout")==0){
+        std::cout << "Starting spout" << std::endl;
         Arguments *arg = new Arguments;
-        arg->id = j;
+        arg->id = atoi(argv[2]);
         arg->next_stage = split_threads;
         arg->prev_stage = 0;
-        pthread_create(&spout_t[j], NULL, spout, (void*)arg);  
-        sleep(1);
-        //delete arg;
+        spout((void*) arg, argv[3], atoi(argv[4])); 
     }
-    for (int j=0; j<split_threads; j++){
+    if(strcmp(argv[1], "splitter")==0){
+        std::cout << "Starting splitter" << std::endl;
         Arguments *arg = new Arguments;
-        arg->id = j;
+        arg->id = atoi(argv[2]);
         arg->next_stage = count_threads;
         arg->prev_stage = spout_threads;
-        pthread_create(&split_t[j], NULL, splitter, (void*)arg);
-        sleep(1);
-        //delete arg;
+        std::vector<std::string> senderIP, receiverIP;
+        std::vector<int> senderPort, receiverPort;
+        int nSender = atoi(argv[3]);
+        int nReceiver = atoi(argv[3+(nSender*2)+1]);
+        for(int i=0; i<nSender; i++){
+            senderIP.push_back(argv[4+i]);
+            std::cout << senderIP[i] << std::endl;
+            senderPort.push_back(atoi(argv[4+nSender+i]));
+            std::cout << senderPort[i] << std::endl;
+        }
+        for(int i=0; i<nReceiver; i++){
+            receiverIP.push_back(argv[4+(nSender*2)+i+1]);
+            std::cout << receiverIP[i] << std::endl;
+            receiverPort.push_back(atoi(argv[4+(2*nSender)+nReceiver+i+1]));
+            std::cout << receiverPort[i] << std::endl;
+        }
+            
+        splitter((void *)arg, senderIP, senderPort, receiverIP, receiverPort);
     }
-    for (int j=0; j<count_threads; j++){
+    if(strcmp(argv[1], "count")==0){
+        std::cout << "Starting count" << std::endl;
         Arguments *arg = new Arguments;
-        arg->id = j;
+        arg->id = atoi(argv[2]);
         arg->next_stage = 0;
         arg->prev_stage = split_threads;
-        pthread_create(&count_t[j], NULL, count, (void*)arg);
-        sleep(1);
-        //delete arg;
+        count((void*)arg, argv[3], atoi(argv[4]));
     }
-    std::cout << "Started the components…" << std::endl;
-    while(true){
-        continue;
-    }
+////    struct Arguments arg;
+//    for (int j=0; j<spout_threads; j++){
+//        Arguments *arg = new Arguments;
+//        arg->id = j;
+//        arg->next_stage = split_threads;
+//        arg->prev_stage = 0;
+//        pthread_create(&spout_t[j], NULL, spout, (void*)arg);  
+//        sleep(1);
+//        //delete arg;
+//    }
+//    for (int j=0; j<split_threads; j++){
+//        Arguments *arg = new Arguments;
+//        arg->id = j;
+//        arg->next_stage = count_threads;
+//        arg->prev_stage = spout_threads;
+//        pthread_create(&split_t[j], NULL, splitter, (void*)arg);
+//        sleep(1);
+//        //delete arg;
+//    }
+//    for (int j=0; j<count_threads; j++){
+//        Arguments *arg = new Arguments;
+//        arg->id = j;
+//        arg->next_stage = 0;
+//        arg->prev_stage = split_threads;
+//        pthread_create(&count_t[j], NULL, count, (void*)arg);
+//        sleep(1);
+//        //delete arg;
+//    }
+//    std::cout << "Started the components…" << std::endl;
+//    while(true){
+//        continue;
+//    }
     return 0;
 }
 

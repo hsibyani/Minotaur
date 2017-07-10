@@ -30,11 +30,11 @@ void enclave_execute(std::string smessage) {
     }
 }
 
-void* count(void *arg)
+void* count(void *arg, std::string receiverIP, int port)
 {
     struct Arguments * param = (Arguments*) arg;
     zmq::context_t context(1);
-    zmq::socket_t receiver = key_receiver_conn(param, context, "127.0.0.1", 6000);
+    zmq::socket_t receiver = key_receiver_conn(param, context, receiverIP, port);
     
     std::cout << "Starting the count worker " << std::endl;
     //  Process tasks forever

@@ -13,6 +13,7 @@
 #endif	/* UTILS_HPP */
 #include "zmq.hpp"
 struct Arguments{
+    const char * ip; 
     int id;
     int next_stage;
     int prev_stage;
@@ -23,6 +24,7 @@ struct StringArray{
 };
 
 zmq::socket_t key_receiver_conn(Arguments * param, zmq::context_t & context, std::string ip, int port);
-zmq::socket_t key_sender_conn(Arguments * param, zmq::context_t & context, std::string ip, int port);
-zmq::socket_t shuffle_receiver_conn(Arguments * param, zmq::context_t & context, std::string ip, int port);
+zmq::socket_t key_sender_conn(Arguments * param, zmq::context_t & context, std::vector<std::string> ip, std::vector<int> port);
+zmq::socket_t shuffle_receiver_conn(Arguments * param, zmq::context_t & context, 
+        std::vector<std::string> ip, std::vector<int> port);
 zmq::socket_t shuffle_sender_conn(Arguments * param, zmq::context_t & context, std::string ip, int port);

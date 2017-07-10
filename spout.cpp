@@ -21,11 +21,11 @@ void enclave_execute(int* j, int* n){
         //return j;
 }
 
-void* spout (void *arg)
+void* spout (void *arg, std::string ip, int port)
 {
     zmq::context_t context (1);
     struct Arguments * param = (Arguments*) arg; 
-    zmq::socket_t sender = shuffle_sender_conn(param, context, "127.0.0.1", 5000);
+    zmq::socket_t sender = shuffle_sender_conn(param, context, ip, port);
     std::cout << "Sending tasks to workers…\n" << std::endl;
     zmq::message_t message(2);
 
