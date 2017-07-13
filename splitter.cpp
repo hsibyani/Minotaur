@@ -3,7 +3,7 @@
 #include <string>
 #include <functional>
 #include "utils.hpp"
-
+#include "splitExec.hpp"
 //TODO: Need to do something with the zmq::socket
 
 //void osend(const char * rmessage, void* sender) {
@@ -16,57 +16,6 @@
 //    s.send(message);
 //
 //}
-
-void enclave_execute(std::string smessage, int n, void *sender, StringArray** retmessage, int ** retlen, int * nc) {
-    std::string word;
-    std::istringstream iss(smessage);
-
-    unsigned int j = 0;
-    iss >> word;
-    int count = std::distance(std::istream_iterator<std::string>(iss >> std::ws), std::istream_iterator<std::string>());
-    //std::cout << count << std::endl;
-
-    //std::cout << "Allocating memory" << std::endl;
-    *nc = count; 
-    *retmessage = (StringArray *) malloc(sizeof(StringArray));
-    (*retmessage)->array = (char**) malloc(count * sizeof (char *));
-    //retlen = (int **) malloc(sizeof(int*)); 
-    *retlen = (int *)malloc(count * sizeof (int));
-    //std::cout<< sizeof((*retmessage)->array) << std::endl;
-//    for (int x=0; x<count; x++){
-//        std::cout << "Allocating space" << std::endl;
-//        (*retmessage)->array[x] = (char *) malloc(count * sizeof(char));
-//        std::cout << (*retmessage)->array[x] << std::endl;
-//    }
-        //std::cout<<"1" << (*retmessage)->array[x]<<std::endl;
-    //std::cout<< "Total elements " << count << std::endl;
-    
-    iss.clear();
-    iss.seekg(0);
-    
-    iss >> word;
-    int i = 0;
-    while (iss >> word) {
-        std::hash<std::string> hasher;
-        auto hashed = hasher(word);
-        j = hashed % n;
-        //std::cout << *retlen[i] << std::endl;
-//        std::cout << sizeof(int) << std::endl;
-//        std::cout << (*retlen)+i << std::endl;
-        *((*retlen)+i) = word.length() + std::to_string(j).length() + 2;
-        //*(*retlen+6) = 10;
-        //std::cout << *retlen[10] << std::endl;
-        
-        (*retmessage)->array[i] = (char *) malloc(*((*retlen)+i) * sizeof(char));
-        //std::cout << (*retmessage)->array[1] << std::endl;
-        //std::cout << "Copy string to return message" << std::endl;
-        snprintf((*retmessage)->array[i], *((*retlen)+i), "%d %s", j, word.c_str());
-        //std::cout << (*retmessage)->array[i] << std::endl;
-        //std::cout<< sizeof((*retmessage)->array) << std::endl;
-        i = i+1;
-        //osend(message, sender);
-    }
-}
 
 void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort, 
         std::vector<std::string> receiverIP, std::vector<int> receiverPort) {
