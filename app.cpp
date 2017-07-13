@@ -21,8 +21,12 @@ void* spout (void *arg, std::string ip, int port);
 void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort, 
         std::vector<std::string> receiverIP, std::vector<int> receiverPort);
 void* count(void *arg, std::string receiverIP, int port);
-/*
- * 
+
+/* Right now it can only be used to start up different components of a word count program
+ * To start up a spout use: ./app spout <spoutID> <spoutIP> <spoutPort>
+ * To start up a split use: ./app splitter <splitID> <n> <countIP1> <countPort1> ... <countIPn> <countPortn>
+ * <m> <spoutIP1> <spoutPort1> ... <spoutIPm> <spoutPortm>
+ * To start up a count use: ./app count <countID> <countIP> <countPort>
  */
 int main(int argc, char** argv) {
     
