@@ -4,22 +4,6 @@
 #include <unistd.h>
 #include <iostream>
 #include "utils.hpp"
-//void execute(zmq::socket_t sender){
-//    
-//}
-
-// Needs to happen in enclave
-int enclave_shuffle_routing(int j, int n){
-    j++;
-    j = j% n;
-    return j;
-}
-
-// What needs to happen within the enclave?
-void enclave_execute(int* j, int* n){
-        *j = enclave_shuffle_routing(*j,*n);
-        //return j;
-}
 
 void* spout (void *arg, std::string ip, int port)
 {

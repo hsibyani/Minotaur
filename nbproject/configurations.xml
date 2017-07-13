@@ -6,6 +6,9 @@
                    projectFiles="true">
       <itemPath>Client.h</itemPath>
       <itemPath>Server.h</itemPath>
+      <itemPath>countExec.hpp</itemPath>
+      <itemPath>splitExec.hpp</itemPath>
+      <itemPath>spoutExec.hpp</itemPath>
       <itemPath>utils.hpp</itemPath>
       <itemPath>zhelpers.hpp</itemPath>
       <itemPath>zmq.hpp</itemPath>
@@ -23,8 +26,11 @@
       </logicalFolder>
       <itemPath>app.cpp</itemPath>
       <itemPath>count.cpp</itemPath>
+      <itemPath>countExec.cpp</itemPath>
+      <itemPath>splitExec.cpp</itemPath>
       <itemPath>splitter.cpp</itemPath>
       <itemPath>spout.cpp</itemPath>
+      <itemPath>spoutExec.cpp</itemPath>
       <itemPath>test.cpp</itemPath>
       <itemPath>utils.cpp</itemPath>
     </logicalFolder>
@@ -60,6 +66,10 @@
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
           </linkerAddLib>
+          <linkerDynSerch>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+          </linkerDynSerch>
         </linkerTool>
       </compileType>
       <item path="Client.cpp" ex="false" tool="1" flavor2="0">
@@ -74,9 +84,21 @@
       </item>
       <item path="count.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="countExec.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="countExec.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="splitExec.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="splitExec.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="splitter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="spout.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="spoutExec.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="spoutExec.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="test.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -108,6 +130,12 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <linkerDynSerch>
+            <pElem>.</pElem>
+            <pElem>.</pElem>
+          </linkerDynSerch>
+        </linkerTool>
       </compileType>
       <item path="Client.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -121,9 +149,21 @@
       </item>
       <item path="count.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="countExec.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="countExec.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="splitExec.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="splitExec.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="splitter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="spout.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="spoutExec.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="spoutExec.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="test.cpp" ex="false" tool="1" flavor2="0">
       </item>

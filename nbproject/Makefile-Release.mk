@@ -39,8 +39,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/Server.o \
 	${OBJECTDIR}/app.o \
 	${OBJECTDIR}/count.o \
+	${OBJECTDIR}/countExec.o \
+	${OBJECTDIR}/splitExec.o \
 	${OBJECTDIR}/splitter.o \
 	${OBJECTDIR}/spout.o \
+	${OBJECTDIR}/spoutExec.o \
 	${OBJECTDIR}/test.o \
 	${OBJECTDIR}/utils.o
 
@@ -89,6 +92,16 @@ ${OBJECTDIR}/count.o: count.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/count.o count.cpp
 
+${OBJECTDIR}/countExec.o: countExec.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/countExec.o countExec.cpp
+
+${OBJECTDIR}/splitExec.o: splitExec.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/splitExec.o splitExec.cpp
+
 ${OBJECTDIR}/splitter.o: splitter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -98,6 +111,11 @@ ${OBJECTDIR}/spout.o: spout.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/spout.o spout.cpp
+
+${OBJECTDIR}/spoutExec.o: spoutExec.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/spoutExec.o spoutExec.cpp
 
 ${OBJECTDIR}/test.o: test.cpp
 	${MKDIR} -p ${OBJECTDIR}
