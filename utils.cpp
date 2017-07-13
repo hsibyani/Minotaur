@@ -3,6 +3,7 @@
 #include <functional>
 #include "utils.hpp"
 
+// Function to setup connection for a receiver endpoint of a key based grouping
 zmq::socket_t key_receiver_conn(Arguments * param, zmq::context_t & context, std::string ip, int port){
     //  Socket to receive messages on
     zmq::socket_t receiver(context, ZMQ_SUB);
@@ -12,6 +13,7 @@ zmq::socket_t key_receiver_conn(Arguments * param, zmq::context_t & context, std
     return receiver;
 }
 
+// Function to setup connection for a sender endpoint of a key based grouping
 zmq::socket_t key_sender_conn(Arguments * param, zmq::context_t & context, 
         std::vector<std::string> ip, std::vector<int> port){
     //  Socket to send messages to
@@ -22,6 +24,7 @@ zmq::socket_t key_sender_conn(Arguments * param, zmq::context_t & context,
     return sender;
 }
 
+// Function to setup connection for a sender endpoint of a shuffle based grouping
 zmq::socket_t shuffle_sender_conn(Arguments * param, zmq::context_t & context, std::string ip, int port){
     //  Socket to send messages on
     zmq::socket_t  sender(context, ZMQ_PUB);
@@ -30,6 +33,7 @@ zmq::socket_t shuffle_sender_conn(Arguments * param, zmq::context_t & context, s
     return sender;
 }
 
+// Function to setup connection for a receiver endpoint of a shuffle based grouping
 zmq::socket_t shuffle_receiver_conn(Arguments * param, zmq::context_t & context, 
         std::vector<std::string> ip, std::vector<int> port){
     zmq::socket_t receiver(context, ZMQ_SUB);

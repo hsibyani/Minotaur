@@ -1,4 +1,4 @@
-##Install Zeromq 
+## Install Zeromq 
 Each machine that you plan on using for the application would require following steps to install the pre-req:
 
 ```wget https://github.com/zeromq/libzmq/releases/download/v4.2.1/zeromq-4.2.1.tar.gz
