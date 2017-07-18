@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <iostream>
 #include "utils.hpp"
+#include "spoutExec.hpp"
 
 void* spout (void *arg, std::string ip, int port)
 {
