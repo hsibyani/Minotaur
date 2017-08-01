@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <iterator>
 
 struct StringArray{
     char **array; 
