@@ -17,8 +17,11 @@
 
 //using namespace std;
 
-void* spout (void *arg, std::string ip, int port);
-void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort, 
+//void* spout (void *arg, std::string ip, int port);
+void* sSpout (void *arg, std::string ip, int port);
+void* sSplitter(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort, 
+        std::vector<std::string> receiverIP, std::vector<int> receiverPort);
+void* wordprop(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort,
         std::vector<std::string> receiverIP, std::vector<int> receiverPort);
 void* count(void *arg, std::string receiverIP, int port);
 
@@ -39,7 +42,7 @@ int main(int argc, char** argv) {
     pthread_t count_t[count_threads];
     
     std::cout << argv[1] << std::endl;
-    if(strcmp(argv[1], "spout")==0){
+  /**  if(strcmp(argv[1], "spout")==0){
         std::cout << "Starting spout" << std::endl;
         Arguments *arg = new Arguments;
         arg->id = atoi(argv[2]);
@@ -47,6 +50,16 @@ int main(int argc, char** argv) {
         arg->prev_stage = 0;
         spout((void*) arg, argv[3], atoi(argv[4])); 
     }
+**/
+    if(strcmp(argv[1], "sSpout")==0){
+        std::cout << "Starting sSpout" << std::endl;
+        Arguments *arg = new Arguments;
+        arg->id = atoi(argv[2]);
+        arg->next_stage = split_threads;
+        arg->prev_stage = 0;
+        sSpout((void*) arg, argv[3], atoi(argv[4]));
+    }
+/**
     if(strcmp(argv[1], "splitter")==0){
         std::cout << "Starting splitter" << std::endl;
         Arguments *arg = new Arguments;
@@ -72,6 +85,60 @@ int main(int argc, char** argv) {
             
         splitter((void *)arg, senderIP, senderPort, receiverIP, receiverPort);
     }
+**/
+    if(strcmp(argv[1], "sSplitter")==0){
+        std::cout << "Starting sSplitter" << std::endl;
+        Arguments *arg = new Arguments;
+        arg->id = atoi(argv[2]);
+        arg->next_stage = count_threads;
+        arg->prev_stage = spout_threads;
+        std::vector<std::string> senderIP, receiverIP;
+        std::vector<int> senderPort, receiverPort;
+        int nSender = atoi(argv[3]);
+        int nReceiver = atoi(argv[3+(nSender*2)+1]);
+        for(int i=0; i<nSender; i++){
+            senderIP.push_back(argv[4+i]);
+            std::cout << senderIP[i] << std::endl;
+            senderPort.push_back(atoi(argv[4+nSender+i]));
+            std::cout << senderPort[i] << std::endl;
+        }
+        for(int i=0; i<nReceiver; i++){
+            receiverIP.push_back(argv[4+(nSender*2)+i+1]);
+            std::cout << receiverIP[i] << std::endl;
+            receiverPort.push_back(atoi(argv[4+(2*nSender)+nReceiver+i+1]));
+            std::cout << receiverPort[i] << std::endl;
+        }
+
+        sSplitter((void *)arg, senderIP, senderPort, receiverIP, receiverPort);
+    }
+
+    if(strcmp(argv[1], "wordprop")==0){
+        std::cout << "Starting wordprop" << std::endl;
+        Arguments *arg = new Arguments;
+        arg->id = atoi(argv[2]);
+        arg->next_stage = count_threads;
+        arg->prev_stage = spout_threads;
+        std::vector<std::string> senderIP, receiverIP;
+        std::vector<int> senderPort, receiverPort;
+        int nSender = atoi(argv[3]);
+        int nReceiver = atoi(argv[3+(nSender*2)+1]);
+        for(int i=0; i<nSender; i++){
+            senderIP.push_back(argv[4+i]);
+            std::cout << senderIP[i] << std::endl;
+            senderPort.push_back(atoi(argv[4+nSender+i]));
+            std::cout << senderPort[i] << std::endl;
+        }
+        for(int i=0; i<nReceiver; i++){
+            receiverIP.push_back(argv[4+(nSender*2)+i+1]);
+            std::cout << receiverIP[i] << std::endl;
+            receiverPort.push_back(atoi(argv[4+(2*nSender)+nReceiver+i+1]));
+            std::cout << receiverPort[i] << std::endl;
+        }
+
+        wordprop((void *)arg, senderIP, senderPort, receiverIP, receiverPort);
+    }
+
+
     if(strcmp(argv[1], "count")==0){
         std::cout << "Starting count" << std::endl;
         Arguments *arg = new Arguments;

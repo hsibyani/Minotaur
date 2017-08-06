@@ -58,6 +58,8 @@ void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> se
             //std::cout << retlen_a[k] << std::endl;
             snprintf((char *) message.data(), retlen_a[k], "%s", retmessage->array[k]);
             sender.send(message);
+            std::cout << "HELLO" << std::endl;
+            std::cout << retlen_a[k] << std::endl;
             std::cout << retmessage->array[k] << std::endl;
         }
 

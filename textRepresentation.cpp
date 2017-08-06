@@ -1,7 +1,7 @@
+/**
 #include <iostream>
 #include <string>
 #include "textRepresentation.h"
-using namespace std;
 
 Word NewWord(std::string word){
     Word w;
@@ -11,6 +11,7 @@ Word NewWord(std::string word){
     w.rSpam = 0.0f;
     w.rGood = 0.0f;
     w.pSpam = 0.0f;
+    w.exist = 1;
     return w;
 };
 
@@ -23,3 +24,5 @@ AnalysisSummary NewSummary(){
 float isWordInteresting(Word word){
     return abs(0.5f - word.pSpam);
 };
+
+**/

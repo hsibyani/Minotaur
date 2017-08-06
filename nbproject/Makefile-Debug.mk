@@ -40,10 +40,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/app.o \
 	${OBJECTDIR}/count.o \
 	${OBJECTDIR}/countExec.o \
-	${OBJECTDIR}/splitExec.o \
-	${OBJECTDIR}/splitter.o \
-	${OBJECTDIR}/spout.o \
-	${OBJECTDIR}/spoutExec.o \
+    ${OBJECTDIR}/sSplitExec.o \
+    ${OBJECTDIR}/sSplitter.o \
+    ${OBJECTDIR}/sSpout.o \
+    ${OBJECTDIR}/sSpoutExec.o \
+    ${OBJECTDIR}/wordprob.o \
+    ${OBJECTDIR}/wordprobExec.o \
 	${OBJECTDIR}/test.o \
 	${OBJECTDIR}/utils.o
 
@@ -97,25 +99,57 @@ ${OBJECTDIR}/countExec.o: countExec.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/countExec.o countExec.cpp
 
-${OBJECTDIR}/splitExec.o: splitExec.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/splitExec.o splitExec.cpp
+#${OBJECTDIR}/splitExec.o: splitExec.cpp
+#	${MKDIR} -p ${OBJECTDIR}
+#	${RM} "$@.d"
+#	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/splitExec.o splitExec.cpp
 
-${OBJECTDIR}/splitter.o: splitter.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/splitter.o splitter.cpp
+#${OBJECTDIR}/splitter.o: splitter.cpp
+#	${MKDIR} -p ${OBJECTDIR}
+#	${RM} "$@.d"
+#	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/splitter.o splitter.cpp
 
-${OBJECTDIR}/spout.o: spout.cpp
+${OBJECTDIR}/sSplitExec.o: sSplitExec.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/spout.o spout.cpp
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sSplitExec.o sSplitExec.cpp
 
-${OBJECTDIR}/spoutExec.o: spoutExec.cpp
+${OBJECTDIR}/sSplitter.o: sSplitter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/spoutExec.o spoutExec.cpp
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sSplitter.o sSplitter.cpp
+
+
+${OBJECTDIR}/wordprob.o: wordprob.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/wordprob.o wordprob.cpp
+
+${OBJECTDIR}/wordprobExec.o: wordprobExec.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/wordprobExec.o wordprobExec.cpp
+
+#${OBJECTDIR}/spout.o: spout.cpp
+#	${MKDIR} -p ${OBJECTDIR}
+#	${RM} "$@.d"
+#	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/spout.o spout.cpp
+
+#${OBJECTDIR}/spoutExec.o: spoutExec.cpp
+#	${MKDIR} -p ${OBJECTDIR}
+#	${RM} "$@.d"
+#	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/spoutExec.o spoutExec.cpp
+
+${OBJECTDIR}/sSpout.o: sSpout.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sSpout.o sSpout.cpp
+
+${OBJECTDIR}/sSpoutExec.o: sSpoutExec.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sSpoutExec.o sSpoutExec.cpp
+
 
 ${OBJECTDIR}/test.o: test.cpp
 	${MKDIR} -p ${OBJECTDIR}

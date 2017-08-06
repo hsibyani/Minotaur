@@ -3,20 +3,56 @@
 #include <sstream>
 #include <iostream>
 #include "textRepresentation.h"
+#include <vector>
 
 WordMap wordMap;
+Word NewWord(std::string word);
+
+struct StringArray{
+    char **array;
+};
+
+std::vector<std::string> splitTheInput(std::string str){
+    //MessageType (ANALYSIS...
+    //SPAM NOT SPAM
+    //COUNT
+    //WORD
+    std::vector<std::string> args;
+    int argnum = 0;
+    int strSize = str.length();
+    int start = 0;
+    for (int i = 0; i<str.length(); i++){
+       if(str[i]==' '){
+           args.push_back(str.substr(start, i-start+1));
+           start = i+1;
+           argnum++;
+       }
+       if(argnum == 3){
+           args.push_back(str.substr(start, strSize - start +1));
+           break;
+       }
+    }
+    return args;
+}
+
 
 // TODO: Convert this string into char buffer
-void enclave_execute(AnalysisMessage smessage, Type type) {
+void enclave_execute_wp(std::string smessage, int n, void *sender, StringArray** retmessage, int ** retlen, int * nc) {
+    
     std::map<std::string, Word> words = wordMap.words;
 
-    if(type == ANALYSIS){
+    std::vector<std::string> args;
+    args = splitTheInput(smessage);
+
+    int type = std::stoi(args[0]);
+/**
+    if(type == 0){
         IntermediateAnalysisMessage smessage = (IntermediateAnalysisMessage) smessage;
         std::string word = smessage.word;
         int id = smessage.id;
         int numWords = smessage.numWords;
 
-        Word w = words[word];
+        Word *w = &words[word];
 
         if(w==NULL){
             w = NewWord(word);
@@ -24,32 +60,29 @@ void enclave_execute(AnalysisMessage smessage, Type type) {
             words[word] = w;
         }
     
+    }else 
+    **/
+    if(type == 1){
+        std::string word = args[3];
+        int count = std::stoi(args[2]);
+        bool isSpam = (bool) std::stoi(args[1]);
+
+        Word w = words[word];
+
+        if(w.exist==0){
+            w = NewWord(word);
+            words[word] = w;
+        }
+
         if(isSpam){
             w.spamCount += count;
         } else {
             w.goodCount += count;
         }
-        
-    }else if(type == TRAINING){
-        IntermediateTrainingMessage smessage = (IntermediateTrainingMessage) smessage;
-        std::string word = smessage.word;
-        int count = smessage.count;
-        bool isSpam = (bool) smessage.isSpam;
 
-        Word w = words[word];
-
-        if(w==NULL){
-            w = NewWord(word);
-            words[word] = w;
-        }
-
-        if(spam){
-            w.spamCount += count;
-        } else {
-            w.goodCount += count;
-        }
-
-    }else if(type == TRAINING_SUM){
+    }
+    /**
+    else if(type == 2){
         IntermediateTrainingSumMessage smessage = (IntermediateTrainingSumMessage) smessage;
         int spamCount = smessage.spamCount;
         int hamCount = smessage.hamCount;
@@ -81,5 +114,5 @@ void enclave_execute(AnalysisMessage smessage, Type type) {
         }
     
     }
-
+**/
 }
