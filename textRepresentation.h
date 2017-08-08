@@ -1,10 +1,11 @@
-#ifndef WORD_H
-#define WORD_H
+#ifndef TEXTREPRESENTATION_H
+#define TEXTREPRESENTATION_H
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cmath>
+#include <map>
 
 typedef enum{
     ANALYSIS,
@@ -57,10 +58,13 @@ struct AnalysisSummary
 {
     std::vector<Word> words;
     int uniqueWords;
+    int exist = 0;
 };
 
-//AnalysisSummary NewSummary();
+Word NewWord(std::string word);
+AnalysisSummary NewSummary();
 
+/**
 Word NewWord(std::string word){
     Word w;
     w.word = word;
@@ -72,15 +76,16 @@ Word NewWord(std::string word){
     w.exist = 1;
     return w;
 };
-
 AnalysisSummary NewSummary(){
     AnalysisSummary as;
     as.uniqueWords = 0;
+    as.exist = 1;
     return as;
 };
-
+**/
+/**
 float isWordInteresting(Word word){
     return std::abs(0.5f - word.pSpam);
 };
-
+**/
 #endif

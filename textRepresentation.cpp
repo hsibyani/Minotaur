@@ -1,7 +1,11 @@
-/**
-#include <iostream>
-#include <string>
 #include "textRepresentation.h"
+
+AnalysisSummary NewSummary(){
+    AnalysisSummary as;
+    as.uniqueWords = 0;
+    as.exist = 1;
+    return as;
+};
 
 Word NewWord(std::string word){
     Word w;
@@ -14,15 +18,3 @@ Word NewWord(std::string word){
     w.exist = 1;
     return w;
 };
-
-AnalysisSummary NewSummary(){
-    AnalysisSummary as;
-    as.uniqueWords = 0;
-    return as;
-};
-
-float isWordInteresting(Word word){
-    return abs(0.5f - word.pSpam);
-};
-
-**/

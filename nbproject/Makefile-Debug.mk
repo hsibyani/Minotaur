@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/Client.o \
 	${OBJECTDIR}/Server.o \
+	${OBJECTDIR}/textRepresentation.o \
 	${OBJECTDIR}/app.o \
 	${OBJECTDIR}/count.o \
 	${OBJECTDIR}/countExec.o \
@@ -46,6 +47,8 @@ OBJECTFILES= \
     ${OBJECTDIR}/sSpoutExec.o \
     ${OBJECTDIR}/wordprob.o \
     ${OBJECTDIR}/wordprobExec.o \
+    ${OBJECTDIR}/bayesrule.o \
+    ${OBJECTDIR}/bayesruleExec.o \
 	${OBJECTDIR}/test.o \
 	${OBJECTDIR}/utils.o
 
@@ -83,6 +86,11 @@ ${OBJECTDIR}/Server.o: Server.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Server.o Server.cpp
+
+${OBJECTDIR}/textRepresentation.o: textRepresentation.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/textRepresentation.o textRepresentation.cpp
 
 ${OBJECTDIR}/app.o: app.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -129,6 +137,16 @@ ${OBJECTDIR}/wordprobExec.o: wordprobExec.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/wordprobExec.o wordprobExec.cpp
+
+${OBJECTDIR}/bayesrule.o: bayesrule.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bayesrule.o bayesrule.cpp
+
+${OBJECTDIR}/bayesruleExec.o: bayesruleExec.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/bayesruleExec.o bayesruleExec.cpp
 
 #${OBJECTDIR}/spout.o: spout.cpp
 #	${MKDIR} -p ${OBJECTDIR}

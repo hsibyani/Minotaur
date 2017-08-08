@@ -39,10 +39,14 @@ void* sSplitter(void *arg, std::vector<std::string> senderIP, std::vector<int> s
         receiver.recv(&message);
         std::string smessage(static_cast<char*> (message.data()), message.size());
         
-        //std::cout << smessage << std::endl;
+        std::cout << "MESSAGE" << std::endl;
+        std::cout << smessage << std::endl;
         std::istringstream iss(smessage);
 
         int n = param->next_stage;
+        std::cout << "n" << std::endl;
+        std::cout << n << std::endl;
+//        int n = 1;
 
         StringArray * retmessage = NULL;
         int * retlen_a = NULL;

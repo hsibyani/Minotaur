@@ -11,10 +11,10 @@
  * Created on July 12, 2017, 8:16 AM
  */
 
-#ifndef WORDPROBEXEC_HPP
-#define WORDPROBEXEC_HPP
+#ifndef BAYESRULEEXEC_HPP
+#define BAYESRULEEXEC_HPP
 
 
 
-#endif /* WORDPROBEXEC_HPP */
-void enclave_execute_wp(std::string smessage, int n, StringArray** retmessage, int ** retlen, int * nc);
+#endif /* BAYESRULEEXEC_HPP */
+void enclave_execute_br(std::string smessage, int n, StringArray** retmessage, int ** retlen, int * nc);

@@ -4,8 +4,39 @@
 #include <iostream>
 #include "textRepresentation.h"
 
+std::map<std::string, AnalysisSummary> summaries;
 
-Map<int, AnalysisSummary> summaries;
+struct StringArray {
+    char **array;
+};
+
+float isWordInteresting(Word word){
+    return std::abs(0.5f - word.pSpam);
+}
+
+std::vector<std::string> splitTheInput_br(std::string str) {
+    //MessageType (TRAINING = 0, ANALYSIS = 1)
+    //ID
+    //Message
+	//wordCount
+    std::vector<std::string> args;
+    int argnum = 0;
+    int strSize = str.length();
+    int start = 0;
+    for (int i = 0; i<str.length(); i++) {
+        if(str[i]==' ') {
+            args.push_back(str.substr(start, i-start));
+            start = i+1;
+            argnum++;
+        }
+        if(argnum == 4) {
+            args.push_back(str.substr(start, strSize - start +1));
+            break;
+        }
+    }
+    return args;
+}
+
 
 //Bayes Rule
 //
@@ -46,24 +77,32 @@ void updateSummary(AnalysisSummary analysis_summary, Word word){
                 words_in_summary.push_back(word);
             }
         }
-    }
-
-    while(words_in_summary.size() > limit){
+        while(words_in_summary.size() > limit){
         words_in_summary.pop_back();
+        }
+
     }
+    //MOVE WHILE FROM HERE
 }
 
 // TODO: Convert this string into char buffer
-void enclave_execute(std::string smessage) {
+void enclave_execute_br(std::string smessage, int n, StringArray** retmessage, int ** retlen, int * nc) {
 
-    IntermediateAnalysisMessage smessage = (IntermediateAnalysisMessage) smessage;
-    std::string word = smessage.word;
-    int id = smessage.id;
-    int numWords = smessage.numWords;
+	std::vector<std::string> args;
+    args = splitTheInput_br(smessage);
+    args.erase(args.begin());
+    int type = std::stoi(args[0]);
     
-    AnalysisSummary summary = summaries.at(id);
+	std::string mes = args[2];
+    Word word = NewWord(mes);
 
-    if(summary == null){
+    std::string id = args[1];
+    std::cout << args[3] << std::endl;
+    int numWords = std::stoi(args[3]);
+    
+    AnalysisSummary summary = summaries[id];
+
+    if(summary.exist == 0){
         summary = NewSummary();
         summaries[id] = summary;
     }
@@ -78,3 +117,4 @@ void enclave_execute(std::string smessage) {
         summaries.erase(id);
     }
 }
+

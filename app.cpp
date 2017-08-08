@@ -21,9 +21,20 @@
 void* sSpout (void *arg, std::string ip, int port);
 void* sSplitter(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort, 
         std::vector<std::string> receiverIP, std::vector<int> receiverPort);
-void* wordprop(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort,
+//void* wordprop(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort,
+//        std::vector<std::string> receiverIP, std::vector<int> receiverPort);
+//void* wordprob(void *arg, std::string receiverIP, int port);
+
+void* wordprob(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort, 
         std::vector<std::string> receiverIP, std::vector<int> receiverPort);
+
+void* bayesrule(void *arg, std::vector<std::string> senderIP, std::vector<int> senderPort,
+        std::vector<std::string> receiverIP, std::vector<int> receiverPort);
+
+//void* bayesrule(void *arg, std::string receiverIP, int port);
+
 void* count(void *arg, std::string receiverIP, int port);
+
 
 /* Right now it can only be used to start up different components of a word count program
  * To start up a spout use: ./app spout <spoutID> <spoutIP> <spoutPort>
@@ -112,8 +123,8 @@ int main(int argc, char** argv) {
         sSplitter((void *)arg, senderIP, senderPort, receiverIP, receiverPort);
     }
 
-    if(strcmp(argv[1], "wordprop")==0){
-        std::cout << "Starting wordprop" << std::endl;
+    if(strcmp(argv[1], "wordprob")==0){
+        std::cout << "Starting wordprob" << std::endl;
         Arguments *arg = new Arguments;
         arg->id = atoi(argv[2]);
         arg->next_stage = count_threads;
@@ -135,9 +146,46 @@ int main(int argc, char** argv) {
             std::cout << receiverPort[i] << std::endl;
         }
 
-        wordprop((void *)arg, senderIP, senderPort, receiverIP, receiverPort);
+        wordprob((void *)arg, senderIP, senderPort, receiverIP, receiverPort);
     }
+    if(strcmp(argv[1], "bayesrule")==0){
+        std::cout << "Starting bayesrule" << std::endl;
+        Arguments *arg = new Arguments;
+        arg->id = atoi(argv[2]);
+        arg->next_stage = count_threads;
+        arg->prev_stage = spout_threads;
+        std::vector<std::string> senderIP, receiverIP;
+        std::vector<int> senderPort, receiverPort;
+        int nSender = atoi(argv[3]);
+        int nReceiver = atoi(argv[3+(nSender*2)+1]);
+        for(int i=0; i<nSender; i++){
+            senderIP.push_back(argv[4+i]);
+            std::cout << senderIP[i] << std::endl;
+            senderPort.push_back(atoi(argv[4+nSender+i]));
+            std::cout << senderPort[i] << std::endl;
+        }
+        std::cout << "here0" << std::endl;
+        for(int i=0; i<nReceiver; i++){
+            receiverIP.push_back(argv[4+(nSender*2)+i+1]);
+            std::cout << receiverIP[i] << std::endl;
+            receiverPort.push_back(atoi(argv[4+(2*nSender)+nReceiver+i+1]));
+            std::cout << receiverPort[i] << std::endl;
+        }
+        std::cout << "here1" << std::endl;
 
+        bayesrule((void *)arg, senderIP, senderPort, receiverIP, receiverPort);
+    }
+    
+    /**
+    if(strcmp(argv[1], "bayesrule")==0){
+        std::cout << "Starting count" << std::endl;
+        Arguments *arg = new Arguments;
+        arg->id = atoi(argv[2]);
+        arg->next_stage = 0;
+        arg->prev_stage = split_threads;
+        bayesrule((void*)arg, argv[3], atoi(argv[4]));
+    }
+**/
 
     if(strcmp(argv[1], "count")==0){
         std::cout << "Starting count" << std::endl;
@@ -147,6 +195,16 @@ int main(int argc, char** argv) {
         arg->prev_stage = split_threads;
         count((void*)arg, argv[3], atoi(argv[4]));
     }
+/**
+	if(strcmp(argv[1], "wordprob")==0){
+        std::cout << "Starting wordprob" << std::endl;
+        Arguments *arg = new Arguments;
+        arg->id = atoi(argv[2]);
+        arg->next_stage = 0;
+        arg->prev_stage = split_threads;
+        wordprob((void*)arg, argv[3], atoi(argv[4]));
+    }
+**/
 ////    struct Arguments arg;
 //    for (int j=0; j<spout_threads; j++){
 //        Arguments *arg = new Arguments;
