@@ -37,7 +37,7 @@ std::vector<std::string> splitTheInput(std::string str) {
 }
 
 void enclave_execute(std::string smessage, int n, void *sender, StringArray** retmessage, int ** retlen, int * nc) {
-    
+
     std::vector<std::string> args;
     args = splitTheInput(smessage);
     args.erase(args.begin());
@@ -62,15 +62,15 @@ void enclave_execute(std::string smessage, int n, void *sender, StringArray** re
         int hamTotal = 0;
 
         bool isSpam = (bool) std::stoi(args[1]);
-        
+
 //        std::map<std::string, int>::iterator it = wordsCount.begin();
-  //      while(it != wordsCount.end()){
+        //      while(it != wordsCount.end()){
 //        for ( it; it != wordsCount.end(); it++ )
-  //      {
-        for(std::pair<std::string, int> element : wordsCount){
+        //      {
+        for(std::pair<std::string, int> element : wordsCount) {
             if(isSpam) {
                 spamTotal += element.second;
-                std::cout << element.first << std::endl;
+                //std::cout << element.first << std::endl;
             } else {
                 hamTotal += element.second;
             }
@@ -80,13 +80,13 @@ void enclave_execute(std::string smessage, int n, void *sender, StringArray** re
         std::istringstream iss(args[2]);
         unsigned int j = 0;
         iss >> word;
-        int count = std::distance(std::istream_iterator<std::string>(iss >> std::ws), std::istream_iterator<std::string>()) + 1;
-        std::cout << "COUNT" << std::endl;
-        std::cout << count << std::endl;
+//        int count = std::distance(std::istream_iterator<std::string>(iss >> std::ws), std::istream_iterator<std::string>()) + 1;
+        int count = wordsCount.size() + 1;
+        //std::cout << "COUNT" << std::endl;
+        //std::cout << count << std::endl;
         *nc = count;
         *retmessage = (StringArray *) malloc(sizeof(StringArray));
         (*retmessage)->array = (char**) malloc(count * sizeof (char *));
-
         *retlen = (int *)malloc(count * sizeof (int));
 
         iss.clear();
@@ -97,6 +97,8 @@ void enclave_execute(std::string smessage, int n, void *sender, StringArray** re
 
         iss >> word;
         int i = 0;
+
+        /**
         while (iss >> word) {
             std::hash<std::string> hasher;
             auto hashed = hasher(word);
@@ -106,27 +108,56 @@ void enclave_execute(std::string smessage, int n, void *sender, StringArray** re
             snprintf((*retmessage)->array[i], *((*retlen)+i), "%d %d %d %s %d", j, type, (int) isSpam, word.c_str(), wordsCount[word]);
 
             i = i+1;
-        }
-        std::cout << "sum0" << std::endl;
-        *((*retlen)+i) = 2*std::to_string(0).length() + 2 + std::to_string(spamTotal).length() + 1 +std::to_string(hamTotal).length() + 1 + 1;
-                std::cout << "sum1" << std::endl;
+        }**/
+        int wordCount;
+        for(std::pair<std::string, int> element : wordsCount) {
+            word = element.first;
+            wordCount = element.second;
 
+            //std::cout << word << std::endl;
+            //std::cout << wordCount << std::endl;
+
+            std::hash<std::string> hasher;
+            auto hashed = hasher(word);
+            j = hashed % n;
+
+            *((*retlen)+i) = word.length() + std::to_string(j).length() + 2 + std::to_string(wordsCount[word]).length() + 1 + 2*std::to_string(1).length() + 2;
             (*retmessage)->array[i] = (char *) malloc(*((*retlen)+i) * sizeof(char));
-                    std::cout << "sum2" << std::endl;
+            snprintf((*retmessage)->array[i], *((*retlen)+i), "%d %d %d %s %d", j, type, (int) isSpam, word.c_str(), wordsCount[word]);
 
-            snprintf((*retmessage)->array[i], *((*retlen)+i), "%d %d %d %d", 0, 2, spamTotal, hamTotal);
-                    std::cout << "sum3" << std::endl;
+            i = i+1;
+
+        }
+
+        //std::cout << "sum0" << std::endl;
+        *((*retlen)+i) = 2*std::to_string(0).length() + 2 + std::to_string(spamTotal).length() + 1 +std::to_string(hamTotal).length() + 1 + 1;
+        //std::cout << "sum1" << std::endl;
+
+        (*retmessage)->array[i] = (char *) malloc(*((*retlen)+i) * sizeof(char));
+        //std::cout << "size inside" << std::endl;
+        //std::cout<<sizeof((*retmessage)->array[i])<<std::endl;
+
+
+        snprintf((*retmessage)->array[i], *((*retlen)+i), "%d %d %d %d", 0, 2, spamTotal, hamTotal);
+        //std::cout << "sum3" << std::endl;
+
+        //std::cout << "SIZE" << std::endl;
+        //std::cout << wordsCount.size() << std::endl;
+        //std::cout << i << std::endl;
+
+
 
     }
 
     else if(type == 1) {//ANALYSIS
-        std::cout << "In analysis" << std::endl;
+        //std::cout << "In analysis" << std::endl;
         std::string id = args[1];
-        std::cout << id.length() << std::endl;
+        //std::cout << id.length() << std::endl;
 
         std::istringstream iss(args[2]);
         iss >> word;
-        int count = std::distance(std::istream_iterator<std::string>(iss >> std::ws), std::istream_iterator<std::string>());
+        //int count = std::distance(std::istream_iterator<std::string>(iss >> std::ws), std::istream_iterator<std::string>());
+        int count = wordsCount.size();
 
         *nc = count;
         *retmessage = (StringArray *) malloc(sizeof(StringArray));
@@ -143,9 +174,9 @@ void enclave_execute(std::string smessage, int n, void *sender, StringArray** re
         int wordCount;
         int i = 0;
         unsigned int j = 0;
-        for(std::pair<std::string, int> element : wordsCount){
-        //for ( it = wordsCount.begin(); it != wordsCount.end(); it++ )
-        //{
+        for(std::pair<std::string, int> element : wordsCount) {
+            //for ( it = wordsCount.begin(); it != wordsCount.end(); it++ )
+            //{
 
             word = element.first;
             wordCount = element.second;
@@ -153,14 +184,21 @@ void enclave_execute(std::string smessage, int n, void *sender, StringArray** re
             std::hash<std::string> hasher;
             auto hashed = hasher(word);
             j = hashed % n;
-            
+
             *((*retlen)+i) = word.length() + std::to_string(j).length() + 2 + 1 + 1 + std::to_string(type).length() + std::to_string(wordCount).length() + id.length() + 1;
             (*retmessage)->array[i] = (char *) malloc(*((*retlen)+i) * sizeof(char));
+            //std::cout << "size inside" << std::endl;
+            //std::cout<<sizeof((*retmessage)->array[i])<<std::endl;
+
             snprintf((*retmessage)->array[i], *((*retlen)+i), "%d %d %s %s %d", j, type, id.c_str(), word.c_str(), wordCount);
-            
+
             i = i+1;
 
         }
+        //std::cout << "SIZE" << std::endl;
+        //std::cout << wordsCount.size() << std::endl;
+        //std::cout << i << std::endl;
+
 
     }
 }
