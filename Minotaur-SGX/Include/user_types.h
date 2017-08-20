@@ -29,39 +29,17 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
-    
-    include "user_types.h" /* buffer_t */
-    include "buffer.h"
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
+/* User defined types */
 
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    
-    trusted{
-        public void enclave_spout_execute([in, out] int * j, [in] int *n);
-        public void enclave_splitter_execute([in, string] const char* csmessage, [in] int* n, [out, isptr] StringArray* retmessage, [out, isary] word_len  retlen, [out] int * nc);
-        public void enclave_count_execute([in, string] const char * csmessage);	
-    };
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] const char *str);
-    };
 
+#define LOOPS_PER_THREAD 500
+
+typedef void *buffer_t;
+typedef int array_t[10];
+typedef int word_len[20];
+struct StringArray{
+    char array[20][21];
 };
+
+typedef struct StringArray StringArray;

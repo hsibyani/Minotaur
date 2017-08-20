@@ -125,7 +125,7 @@ std::vector<std::string> split(const char * str, char c= ' '){
 
 	return result;
 }
-void enclave_splitter_execute(const char * csmessage, int *np, StringArray* retmessage, int *retlen, int * nc) {
+void enclave_splitter_execute(const char * csmessage, int *np, StringArray** retmessage, int ** retlen, int * nc) {
     std::string word;
     int n = *np;
 //    std::string smessage = csmessage;
@@ -138,10 +138,10 @@ void enclave_splitter_execute(const char * csmessage, int *np, StringArray* retm
     //int count = std::distance(std::istream_iterator<std::string>(iss >> std::ws), std::istream_iterator<std::string>());
     
     *nc = count;
-   // *retmessage = (StringArray *) malloc(sizeof(StringArray));
-   // (*retmessage)->array = (char**) malloc(count * sizeof (char *));
+    *retmessage = (StringArray *) malloc(sizeof(StringArray));
+    (*retmessage)->array = (char**) malloc(count * sizeof (char *));
 
-    //*retlen = (int *)malloc(count * sizeof (int));
+    *retlen = (int *)malloc(count * sizeof (int));
 
   //  iss.clear();
   //  iss.seekg(0);
@@ -157,10 +157,10 @@ void enclave_splitter_execute(const char * csmessage, int *np, StringArray* retm
         int len = snprintf(NULL, 0, "%d", j);
         
         //*((*retlen)+i) = word.length() + std::to_string(j).length() + 2;
-        *(retlen+i) = word.length() + len + 2;
-        //retmessage->array[i] = (char *) malloc(*(retlen+i) * sizeof(char));
+        *((*retlen)+i) = word.length() + len + 2;
+        (*retmessage)->array[i] = (char *) malloc(*((*retlen)+i) * sizeof(char));
         //printf(word.c_str());
-        snprintf(retmessage->array[i], *(retlen+i), "%d %s", j, word.c_str());
+        snprintf((*retmessage)->array[i], *((*retlen)+i), "%d %s", j, word.c_str());
 
         i = i+1;
     }
