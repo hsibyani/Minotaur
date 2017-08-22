@@ -18,6 +18,11 @@ struct Arguments{
     int next_stage;
     int prev_stage;
 };
+struct StringArray{
+    char array[20][21];
+};
+
+typedef struct StringArray StringArray;
 
 zmq::socket_t key_receiver_conn(Arguments * param, zmq::context_t & context, std::string ip, int port);
 zmq::socket_t key_sender_conn(Arguments * param, zmq::context_t & context, std::vector<std::string> ip, std::vector<int> port);

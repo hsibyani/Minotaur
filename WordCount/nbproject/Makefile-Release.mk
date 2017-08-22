@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-MacOSX
 CND_DLIB_EXT=dylib
-CND_CONF=Debug
+CND_CONF=Release
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -41,8 +41,8 @@ OBJECTFILES=
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-lzmq
-CXXFLAGS=-lzmq
+CCFLAGS=
+CXXFLAGS=
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -51,7 +51,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L/usr/local/lib
+LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -64,57 +64,57 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/minotaur: ${OBJECTFILES}
 ${OBJECTDIR}/Client.cpp.gch: Client.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" Client.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" Client.cpp
 
 ${OBJECTDIR}/Server.cpp.gch: Server.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" Server.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" Server.cpp
 
 ${OBJECTDIR}/app.cpp.gch: app.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" app.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" app.cpp
 
 ${OBJECTDIR}/count.cpp.gch: count.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" count.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" count.cpp
 
 ${OBJECTDIR}/countExec.cpp.gch: countExec.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" countExec.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" countExec.cpp
 
 ${OBJECTDIR}/splitExec.cpp.gch: splitExec.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" splitExec.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" splitExec.cpp
 
 ${OBJECTDIR}/splitter.cpp.gch: splitter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" splitter.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" splitter.cpp
 
 ${OBJECTDIR}/spout.cpp.gch: spout.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" spout.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" spout.cpp
 
 ${OBJECTDIR}/spoutExec.cpp.gch: spoutExec.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" spoutExec.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" spoutExec.cpp
 
 ${OBJECTDIR}/test.cpp.gch: test.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" test.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" test.cpp
 
 ${OBJECTDIR}/utils.cpp.gch: utils.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/usr/local/include -std=c++11 -MMD -MP -MF "$@.d" -o "$@" utils.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o "$@" utils.cpp
 
 # Subprojects
 .build-subprojects:

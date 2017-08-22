@@ -7,8 +7,6 @@
 
 #include <cstdlib>
 #include<iostream>
-#include "Server.h"
-#include "Client.h"
 #include <pthread.h>
 #include <unistd.h>
 #include "utils.hpp"

@@ -15,6 +15,7 @@
 #define SPLITEXEC_HPP
 
 
-
 #endif /* SPLITEXEC_HPP */
+#include "utils.hpp"
+
 void enclave_execute(std::string smessage, int n, void *sender, StringArray** retmessage, int ** retlen, int * nc);

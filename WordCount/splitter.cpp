@@ -2,7 +2,6 @@
 //#include "zmq.hpp"
 #include <string>
 #include <functional>
-#include "utils.hpp"
 #include "splitExec.hpp"
 //TODO: Need to do something with the zmq::socket
 
