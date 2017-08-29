@@ -6,7 +6,7 @@ make
 sudo make install
 sudo ldconfig
 
-git clone https://github.com/msgpack-c.git
+git clone https://github.com/msgpack/msgpack-c.git
 cd msgpack-c
 cmake .
 make
