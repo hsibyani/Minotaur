@@ -29,39 +29,44 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
-    
-    include "user_types.h" /* buffer_t */
-    include "buffer.h"
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
+#include "../App.h"
+#include "Enclave_u.h"
 
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    
-    trusted{
-        public void enclave_spout_execute([in, out] int * j, [in] int *n);
-        public void enclave_splitter_execute([in,size=100] char* csmessage, [in] int * slength, [in, size=16]  char* tag,[in] int* n, [out, isptr] StringArray* retmessage, [out, isary] word_len  retlen, [out] int * nc, [out, isptr]  MacArray* mac, [out] int * pRoute);
-        public void enclave_count_execute([in, size=30] char * csmessage,[in] int * slength, [in, size=16] char * gcm_tag);	
-    };
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] const char *str);
-    };
+/* No need to implement memccpy here! */
 
-};
+/* edger8r_function_attributes:
+ *   Invokes ECALL declared with calling convention attributes.
+ *   Invokes ECALL declared with [public].
+ */
+void edger8r_function_attributes(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+
+    ret = ecall_function_calling_convs(global_eid);
+    if (ret != SGX_SUCCESS)
+        abort();
+    
+    ret = ecall_function_public(global_eid);
+    if (ret != SGX_SUCCESS)
+        abort();
+    
+    /* user shall not invoke private function here */
+    int runned = 0;
+    ret = ecall_function_private(global_eid, &runned);
+    if (ret != SGX_ERROR_ECALL_NOT_ALLOWED || runned != 0)
+        abort();
+}
+
+/* ocall_function_allow:
+ *   The OCALL invokes the [allow]ed ECALL 'edger8r_private'.
+ */
+void ocall_function_allow(void)
+{
+    int runned = 0;
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+    
+    ret = ecall_function_private(global_eid, &runned);
+    if (ret != SGX_SUCCESS || runned != 1)
+        abort();
+}

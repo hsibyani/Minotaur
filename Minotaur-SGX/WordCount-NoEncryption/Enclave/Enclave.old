@@ -43,6 +43,7 @@
 #include <vector>
 
 #include "sgx_tcrypto.h"
+//#include "aesgcm.h"
 
 using namespace std;
 
@@ -80,58 +81,25 @@ void printf(const char *fmt, ...)
     va_end(ap);
     ocall_print_string(buf);
 }
-
-void encrypt(char * line, size_t length, char * p_dst, unsigned char * gcm_tag){
-
+// Change this to decrypt
+void decrypt(char * line, size_t length, char * p_dst, unsigned char * gcm_tag){
     uint32_t src_len = length;
     uint8_t*  p_src= reinterpret_cast<uint8_t *>(line);
     uint32_t iv_len = sizeof(gcm_iv)/sizeof(gcm_iv[0]);
     uint32_t aad_len = sizeof(gcm_aad)/sizeof(gcm_aad[0]);
 
-    //printf("IV length %d", iv_len);
-    sgx_status_t sgx_status;
+    //printf("IV length %d", iv_len);   
+    sgx_status_t sgx_status;    
     //printf("%x %x %x", gcm_tag[0], gcm_tag[1], gcm_tag[15]);
     //printf("%x %x %x", line[0], line[1], line[length-1]);
-
-    sgx_status = sgx_rijndael128GCM_encrypt(reinterpret_cast<const sgx_aes_gcm_128bit_key_t *>(gcm_key), p_src, src_len, reinterpret_cast <uint8_t *>(p_dst), gcm_iv, iv_len, gcm_aad, aad_len, reinterpret_cast<sgx_aes_gcm_128bit_tag_t *>(gcm_tag));
+    sgx_status = sgx_rijndael128GCM_decrypt(reinterpret_cast<const sgx_aes_gcm_128bit_key_t *>(gcm_key), p_src, src_len, reinterpret_cast <uint8_t *>(p_dst), gcm_iv, iv_len, gcm_aad, aad_len, reinterpret_cast<sgx_aes_gcm_128bit_tag_t *>(gcm_tag));
     //printf("%s", (char *) p_dst);
 //   aes_gcm_decrypt(p_src, src_len, p_dst, gcm_tag);
     if (SGX_ERROR_MAC_MISMATCH == sgx_status){
-       printf("Mac mismatch");
-    }else if (SGX_SUCCESS != sgx_status){
-        printf("No sucess");
-        }
-}
-
-
-void decrypt(char * line, size_t length, char * p_dst, char * gcm_tag){
-    //printf("Inside the decrypt func");
-//    printf(line);
-    uint32_t src_len = length;
-
-    uint8_t * p_src = (uint8_t *) malloc(length);
-    memset(p_src, 0, length);
-    memcpy(p_src, line, length);
-
-//    uint8_t*  p_src= reinterpret_cast<uint8_t *>(line);
-    uint32_t iv_len = sizeof(gcm_iv)/sizeof(gcm_iv[0]);
-    uint32_t aad_len = sizeof(gcm_aad)/sizeof(gcm_aad[0]);
-
-    uint8_t * t = reinterpret_cast<uint8_t *> (gcm_tag);
-/*    printf("%x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x \n", t[0],t[1], t[2],
-                        t[3], t[4], t[5], t[6], t[7], t[8], t[9], t[10], t[11], t[12], t[13], t[14],t[15]); 
-*/    //printf("IV length %d", iv_len);   
-    sgx_status_t sgx_status;    
-    //printf("%x %x %x", line[0], line[1], line[length-1]);
-    sgx_status = sgx_rijndael128GCM_decrypt(reinterpret_cast<const sgx_aes_gcm_128bit_key_t *>(gcm_key), p_src, src_len, reinterpret_cast <uint8_t *>(p_dst), gcm_iv, iv_len, gcm_aad, aad_len, reinterpret_cast<sgx_aes_gcm_128bit_tag_t *>(gcm_tag));
-//    printf("%s", (char *) p_dst);
-//   aes_gcm_decrypt(p_src, src_len, p_dst, gcm_tag);
-    if (SGX_ERROR_MAC_MISMATCH == sgx_status){
-       printf("Mac mismatch");
+       //printf("Mac mismatch");
     }else if (SGX_SUCCESS != sgx_status){
 	printf("No sucess");
 	}
-    delete p_src; 
 }
 
 int enclave_shuffle_routing(int j, int n){
@@ -157,25 +125,28 @@ std::vector<std::string> split(const char * str, char c= ' '){
 
 	return result;
 }
-void enclave_splitter_execute(char * csmessage, int *slength, char * tag, int *np, StringArray* retmessage, int *retlen, int * nc, MacArray * mac, int *pRoute) {
-    //printf("Inside the enclave");
+void enclave_splitter_execute(const char * csmessage, int *np, StringArray** retmessage, int ** retlen, int * nc) {
     std::string word;
     int n = *np;
-    char p_dst[*slength]; 
-    std::string ctsentence(csmessage, *slength);
-//    printf("%d", ctsentence.length()); 
-    
-    decrypt(csmessage,*slength, p_dst, (char *)tag);     
-///    printf(tag);
-    
-
-    //printf(p_dst);
-
-    std::vector<std::string> s =  split(p_dst);
+//    std::string smessage = csmessage;
+//    std::istringstream iss(smessage);
+    std::vector<std::string> s =  split(csmessage);
     unsigned int j = 0;
+
     int count = s.size();
+    //iss >> word;
+    //int count = std::distance(std::istream_iterator<std::string>(iss >> std::ws), std::istream_iterator<std::string>());
     
     *nc = count;
+    *retmessage = (StringArray *) malloc(sizeof(StringArray));
+    (*retmessage)->array = (char**) malloc(count * sizeof (char *));
+
+    *retlen = (int *)malloc(count * sizeof (int));
+
+  //  iss.clear();
+  //  iss.seekg(0);
+    //printf("%d", count);
+    //iss >> word;
     int i = 0;
     for(int k = 0; k<count; k++) {
 	word = s[k];	
@@ -184,39 +155,34 @@ void enclave_splitter_execute(char * csmessage, int *slength, char * tag, int *n
         j = hashed % n;
 
         int len = snprintf(NULL, 0, "%d", j);
-        *pRoute = j;
-        //*((*retlen)+i) = word.length() + std::to_string(j).length() + 2;
-        *(retlen+i) = word.length();
-        //retmessage->array[i] = (char *) malloc(*(retlen+i) * sizeof(char));
-        //printf(word.c_str());
-	unsigned char ret_tag[16];
-	char gcm_ct [word.length()];
-	encrypt((char * )word.c_str(), word.length(), gcm_ct, ret_tag);
         
-	memcpy(mac->array[i], ret_tag, 16);
-        //snprintf((char *)mac->array[i], 16, "%s", (char *)ret_tag);		
-	memcpy(retmessage->array[i], gcm_ct, *(retlen+i));
-        //snprintf(retmessage->array[i], *(retlen+i), "%s", (char *) gcm_ct);
+        //*((*retlen)+i) = word.length() + std::to_string(j).length() + 2;
+        *((*retlen)+i) = word.length() + len + 2;
+        (*retmessage)->array[i] = (char *) malloc(*((*retlen)+i) * sizeof(char));
+        //printf(word.c_str());
+        snprintf((*retmessage)->array[i], *((*retlen)+i), "%d %s", j, word.c_str());
 
         i = i+1;
     }
 }
 
-void enclave_count_execute(char* csmessage, int * slength, char * gcm_tag) {
+void enclave_count_execute(const char* csmessage) {
 
-     char p_dst[*slength];
-    std::string ctsentence(csmessage, *slength);
-
-    decrypt(csmessage, *slength, p_dst,(char *)gcm_tag);
-  
-    std::string word (p_dst, p_dst+(*slength)); 
+  //  std::string smessage = csmessage;
+    std::string word;
+    //std::istringstream iss(smessage);
+    //iss >> word;
+    //std::cout << word << std::endl;
+    //iss >> word;
+    //std::cout << word << std::endl;
+    std::vector<std::string> s = split(csmessage);
+    word = s[1];
     if (count_map.find(word) != count_map.end()) {
         count_map[word] += 1;
     } else {
         count_map[word] = 1;
     }
     std::map<std::string, int > ::iterator it;
-    //printf(word.c_str());
     // Printing the counts
     /*
     for (it = count_map.begin(); it != count_map.end(); it++) {

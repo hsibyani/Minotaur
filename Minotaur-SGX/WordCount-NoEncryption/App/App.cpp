@@ -294,31 +294,8 @@ void* spout (void *arg, std::string ip, int port)
 	boost::trim(ptsentence);
         //ptsentence = "Hark. They are speaking";
 	std::cout << ptsentence << "  "<<  ptsentence.length()<<std::endl;
-        unsigned char gcm_ct [ptsentence.length()];
-        uint8_t gcm_tag [16];
-
-        encrypt(strdup(ptsentence.c_str()), ptsentence.length(), gcm_ct, gcm_tag);
-	/*for(int i=0; i<ptsentence.length(); i++)
-		printf("%c ", gcm_ct[i]);
-	std::cout << std::endl;
-	uint8_t * t = reinterpret_cast<uint8_t *>(gcm_tag);
-        printf("%x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x \n", t[0],t[1], t[2], 
-			t[3], t[4], t[5], t[6], t[7], t[8], t[9], t[10], t[11], t[12], t[13], t[14],t[15]);
-*/
-	//std::string ctsentence = (char *)gcm_ct;
-	std::string ctsentence((char *)gcm_ct, (int)ptsentence.length());
-//	std::cout << ctsentence.length() << std::endl;
-        std::string mac((char*) gcm_tag, 16);
-
-//	std::cout << ctsentence << std::endl;
-//	std::cout << mac << std::endl;
-         // Create the msgpack
         Message msg;
-        msg.value= std::string(ctsentence);
-        msg.gcm_tag = std::string(mac);
-
-
-        //std::cout << "Sending messages from the spout" << std::endl;
+        msg.value= std::string(ptsentence);
 
         enclave_spout_execute(global_eid,&j,&n);
         struct timespec tv;
@@ -326,14 +303,12 @@ void* spout (void *arg, std::string ip, int port)
         msg.timeNSec = tv.tv_nsec;
 	msg.timeSec = tv.tv_sec;
 	
-        //int len = sentence.length()+std::to_string(j).length()+1;
         msgpack::sbuffer packed; 
         msgpack::pack(&packed, msg);
 
 	message.rebuild(packed.size());
         std::memcpy(message.data(), packed.data(), packed.size());
 
-        //sprintf((char *)message.data(),"%d %s",j,sentence.c_str());
         s_sendmore(sender, std::to_string(j));
         //s_send(sender, message);
         sender.send(message);
@@ -372,8 +347,8 @@ void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> se
      
         msgpack::object obj = oh.get();
         obj.convert(msg);
-        long timeNSec = msg.timeNSec;
-	long timeSec = msg.timeSec;
+        long timeSec = msg.timeSec;
+	long timeNSec = msg.timeNSec;
 //	std::cout << time << std::endl;
 
 	int n = param -> next_stage;
@@ -388,15 +363,7 @@ void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> se
 	int route = 0;
         int *pRoute = &route;
 	
-	char ct [100];
-	int ctLength = msg.value.length();
-	std::copy(msg.value.begin(), msg.value.end(), ct);
-/*	std::cout << msg.value << std::endl;
-	std::cout << msg.value.c_str() << std::endl;
-        std::cout << msg.gcm_tag.c_str() << std::endl;
-        std::cout << "Calling enclave" << std::endl;
- */     
-	enclave_splitter_execute(global_eid, ct, &ctLength, (char *)msg.gcm_tag.c_str(),nPointer, retmessage, retlen_a, retlen, mac, pRoute);
+	enclave_splitter_execute(global_eid, (char *) msg.value.c_str(), nPointer, retmessage, retlen_a, retlen, pRoute);
 
 //        std::cout << "Total Message " << *retlen << std::endl;
         for (int k = 0; k < *retlen; k++) {
@@ -404,10 +371,9 @@ void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> se
     	  Message sendmsg;
 //          std::cout << retmessage->array[k] << std::endl;
           sendmsg.value= std::string(retmessage->array[k]);
-          sendmsg.gcm_tag =std::string((char *)mac->array[k]);
           sendmsg.timeNSec = timeNSec;
-	  sendmsg.timeSec = timeSec;
-        
+          sendmsg.timeSec = timeSec;
+
           msgpack::sbuffer packed;
           msgpack::pack(&packed, sendmsg);
 
@@ -444,18 +410,15 @@ void* count(void *arg, std::string receiverIP, int port)
 
         msgpack::object obj = oh.get();
         obj.convert(msg);
-        long timeNSec = msg.timeNSec;
-	long timeSec = msg.timeSec;
+        long timeSec = msg.timeSec;
+	long timeNSec = msg.timeNSec;
 
-	char ct[30];
-	int ctLength = msg.value.length();
-	std::copy(msg.value.begin(), msg.value.end(), ct);
-        enclave_count_execute(global_eid, ct , &ctLength, (char *)msg.gcm_tag.c_str());
+        enclave_count_execute(global_eid, (char *) msg.value.c_str());
 
         struct timespec tv;
         clock_gettime(CLOCK_REALTIME, &tv);
-	long latency = calLatency(tv.tv_sec, tv.tv_nsec, timeSec, timeNSec);
-        std::cout << "Latency: " << latency<<std::endl;
+	long lat = calLatency(tv.tv_sec, tv.tv_nsec, timeSec, timeNSec);
+        std::cout << "Latency: " << lat <<std::endl;
     }
     return NULL;
 }

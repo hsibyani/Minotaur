@@ -29,39 +29,56 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
-    
-    include "user_types.h" /* buffer_t */
-    include "buffer.h"
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
+/* Test Calling Conventions */
 
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    
-    trusted{
-        public void enclave_spout_execute([in, out] int * j, [in] int *n);
-        public void enclave_splitter_execute([in,size=100] char* csmessage, [in] int * slength, [in, size=16]  char* tag,[in] int* n, [out, isptr] StringArray* retmessage, [out, isary] word_len  retlen, [out] int * nc, [out, isptr]  MacArray* mac, [out] int * pRoute);
-        public void enclave_count_execute([in, size=30] char * csmessage,[in] int * slength, [in, size=16] char * gcm_tag);	
-    };
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] const char *str);
-    };
+#include <string.h>
+#include <stdio.h>
 
-};
+#include "../Enclave.h"
+#include "Enclave_t.h"
+
+/* ecall_function_calling_convs:
+ *   memccpy is defined in system C library.
+ */
+void ecall_function_calling_convs(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+
+    char s1[] = "1234567890";
+    char s2[] = "0987654321";
+
+    char buf[BUFSIZ] = {'\0'};
+    memcpy(buf, s1, strlen(s1));
+
+    ret = memccpy(NULL, s1, s2, '\0', strlen(s1));
+    
+    if (ret != SGX_SUCCESS)
+        abort();
+    assert(memcmp(s1, s2, strlen(s1)) == 0);
+
+    return;
+}
+
+/* ecall_function_public:
+ *   The public ECALL that invokes the OCALL 'ocall_function_allow'.
+ */
+void ecall_function_public(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+
+    ret = ocall_function_allow();
+    if (ret != SGX_SUCCESS)
+        abort();
+    
+    return;
+}
+
+/* ecall_function_private:
+ *   The private ECALL that only can be invoked in the OCALL 'ocall_function_allow'.
+ */
+int ecall_function_private(void)
+{
+    return 1;
+}
+

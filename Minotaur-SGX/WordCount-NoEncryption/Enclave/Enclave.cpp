@@ -157,21 +157,12 @@ std::vector<std::string> split(const char * str, char c= ' '){
 
 	return result;
 }
-void enclave_splitter_execute(char * csmessage, int *slength, char * tag, int *np, StringArray* retmessage, int *retlen, int * nc, MacArray * mac, int *pRoute) {
+void enclave_splitter_execute(char * csmessage, int *np, StringArray* retmessage, int *retlen, int * nc, int *pRoute) {
     //printf("Inside the enclave");
     std::string word;
     int n = *np;
-    char p_dst[*slength]; 
-    std::string ctsentence(csmessage, *slength);
-//    printf("%d", ctsentence.length()); 
-    
-    decrypt(csmessage,*slength, p_dst, (char *)tag);     
-///    printf(tag);
-    
 
-    //printf(p_dst);
-
-    std::vector<std::string> s =  split(p_dst);
+    std::vector<std::string> s =  split(csmessage);
     unsigned int j = 0;
     int count = s.size();
     
@@ -189,27 +180,15 @@ void enclave_splitter_execute(char * csmessage, int *slength, char * tag, int *n
         *(retlen+i) = word.length();
         //retmessage->array[i] = (char *) malloc(*(retlen+i) * sizeof(char));
         //printf(word.c_str());
-	unsigned char ret_tag[16];
-	char gcm_ct [word.length()];
-	encrypt((char * )word.c_str(), word.length(), gcm_ct, ret_tag);
-        
-	memcpy(mac->array[i], ret_tag, 16);
-        //snprintf((char *)mac->array[i], 16, "%s", (char *)ret_tag);		
-	memcpy(retmessage->array[i], gcm_ct, *(retlen+i));
-        //snprintf(retmessage->array[i], *(retlen+i), "%s", (char *) gcm_ct);
+	memcpy(retmessage->array[i], word.c_str(), *(retlen+i));
 
         i = i+1;
     }
 }
 
-void enclave_count_execute(char* csmessage, int * slength, char * gcm_tag) {
+void enclave_count_execute(char* csmessage) {
 
-     char p_dst[*slength];
-    std::string ctsentence(csmessage, *slength);
-
-    decrypt(csmessage, *slength, p_dst,(char *)gcm_tag);
-  
-    std::string word (p_dst, p_dst+(*slength)); 
+    std::string word (csmessage); 
     if (count_map.find(word) != count_map.end()) {
         count_map[word] += 1;
     } else {
