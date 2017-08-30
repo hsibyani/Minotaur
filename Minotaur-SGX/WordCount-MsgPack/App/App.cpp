@@ -291,6 +291,9 @@ void* spout (void *arg, std::string ip, int port)
     int n = param->next_stage;
     while(1){
     while(std::getline(datafile, ptsentence)){
+	struct timespec startT;
+        clock_gettime(CLOCK_REALTIME, &startT);
+
 	boost::trim(ptsentence);
         //ptsentence = "Hark. They are speaking";
 	std::cout << ptsentence << "  "<<  ptsentence.length()<<std::endl;
@@ -325,7 +328,7 @@ void* spout (void *arg, std::string ip, int port)
         clock_gettime(CLOCK_REALTIME, &tv);
         msg.timeNSec = tv.tv_nsec;
 	msg.timeSec = tv.tv_sec;
-	
+	msg.latency = calLatency(tv.tv_sec, tv.tv_nsec, startT.tv_sec, startT.tv_nsec);	
         //int len = sentence.length()+std::to_string(j).length()+1;
         msgpack::sbuffer packed; 
         msgpack::pack(&packed, msg);
@@ -360,6 +363,10 @@ void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> se
     std::cout << "Reading messages, splitter" << std::endl;
     //  Process tasks forever
     while (1) {
+	
+	struct timespec startT;
+        clock_gettime(CLOCK_REALTIME, &startT);
+
         zmq::message_t message;
 
         std::string word;
@@ -374,6 +381,7 @@ void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> se
         obj.convert(msg);
         long timeNSec = msg.timeNSec;
 	long timeSec = msg.timeSec;
+	long latency = msg.latency;
 //	std::cout << time << std::endl;
 
 	int n = param -> next_stage;
@@ -407,6 +415,10 @@ void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> se
           sendmsg.gcm_tag =std::string((char *)mac->array[k]);
           sendmsg.timeNSec = timeNSec;
 	  sendmsg.timeSec = timeSec;
+       	  
+	  struct timespec endT;
+          clock_gettime(CLOCK_REALTIME, &endT);
+	  sendmsg.latency = latency + calLatency(endT.tv_sec, endT.tv_nsec, startT.tv_sec, startT.tv_nsec);
         
           msgpack::sbuffer packed;
           msgpack::pack(&packed, sendmsg);
@@ -432,6 +444,9 @@ void* count(void *arg, std::string receiverIP, int port)
     std::cout << "Starting the count worker " << std::endl;
     //  Process tasks forever
     while(1) {
+	struct timespec startT;
+        clock_gettime(CLOCK_REALTIME, &startT);
+
         zmq::message_t message;
 	std::string topic = s_recv(receiver);
         receiver.recv(&message);
@@ -446,6 +461,7 @@ void* count(void *arg, std::string receiverIP, int port)
         obj.convert(msg);
         long timeNSec = msg.timeNSec;
 	long timeSec = msg.timeSec;
+	long lat = msg.latency;
 
 	char ct[30];
 	int ctLength = msg.value.length();
@@ -454,7 +470,7 @@ void* count(void *arg, std::string receiverIP, int port)
 
         struct timespec tv;
         clock_gettime(CLOCK_REALTIME, &tv);
-	long latency = calLatency(tv.tv_sec, tv.tv_nsec, timeSec, timeNSec);
+	long latency = lat + calLatency(tv.tv_sec, tv.tv_nsec, startT.tv_sec, startT.tv_nsec);
         std::cout << "Latency: " << latency<<std::endl;
     }
     return NULL;
@@ -462,9 +478,9 @@ void* count(void *arg, std::string receiverIP, int port)
 
 
 int func_main(int argc, char** argv){
-    const int count_threads = 3;
-    const int split_threads = 3;
-    const int spout_threads = 1;
+    const int count_threads = 6;
+    const int split_threads = 6;
+    const int spout_threads = 2;
 
     pthread_t spout_t[spout_threads];
     pthread_t split_t[split_threads];
