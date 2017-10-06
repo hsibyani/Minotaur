@@ -2,10 +2,9 @@
 #include <msgpack.hpp>
 
 struct Message{
-	std::string value;
-	std::string gcm_tag;
-	long latency;
+	std::vector<std::string> value;
+	std::vector<std::string> gcm_tag;
 	long timeSec;
 	long timeNSec;
-        MSGPACK_DEFINE(value,gcm_tag,latency, timeSec, timeNSec);
+        MSGPACK_DEFINE(value,gcm_tag, timeSec, timeNSec);
 };

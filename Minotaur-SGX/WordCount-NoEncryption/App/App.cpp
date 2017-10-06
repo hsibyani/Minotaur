@@ -312,7 +312,7 @@ void* spout (void *arg, std::string ip, int port)
         s_sendmore(sender, std::to_string(j));
         //s_send(sender, message);
         sender.send(message);
-        usleep(10);
+        usleep(5);
     }
     	datafile.clear();
 	datafile.seekg(0);
@@ -425,9 +425,9 @@ void* count(void *arg, std::string receiverIP, int port)
 
 
 int func_main(int argc, char** argv){
-    const int count_threads = 3;
-    const int split_threads = 3;
-    const int spout_threads = 1;
+    const int count_threads = 6;
+    const int split_threads = 4;
+    const int spout_threads = 2;
 
     pthread_t spout_t[spout_threads];
     pthread_t split_t[split_threads];

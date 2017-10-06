@@ -34,6 +34,8 @@
 
 
 #define LOOPS_PER_THREAD 500
+#define BUFFER 10
+
 
 typedef void *buffer_t;
 typedef int array_t[10];
@@ -41,11 +43,11 @@ typedef int word_len[20];
 struct StringArray{
     char array[20][20];
 };
-
 typedef struct StringArray StringArray;
+
+
 
 struct MacArray{
      uint8_t array[16][20];    
 };
 typedef struct MacArray MacArray;
-

@@ -172,7 +172,7 @@ void enclave_splitter_execute(char * csmessage, int *np, StringArray* retmessage
 	word = s[k];	
         std::hash<std::string> hasher;
         long hashed = hasher(word);
-        j = hashed % n;
+        j = abs(hashed) % n;
 
         int len = snprintf(NULL, 0, "%d", j);
         *pRoute = j;

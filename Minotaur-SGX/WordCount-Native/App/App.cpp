@@ -62,8 +62,8 @@ cbuffer_t buffer;
 cbuffer_t *p1 = &buffer;
 cbuffer_t **p = &p1;
 
- std::map <std::string, int> count_map;
 
+ std::map <std::string, int> count_map;
 /* Global EID shared by multiple threads */
 sgx_enclave_id_t global_eid = 0;
 long ITERATIONS = 10000;
@@ -304,7 +304,7 @@ void splitter_execute(char * csmessage, int *np, StringArray* retmessage, int *r
     int n = *np;
 
     std::vector<std::string> s =  split(csmessage);
-    unsigned int j = 0;
+    int j = 0;
     int count = s.size();
 
     *nc = count;
@@ -313,7 +313,7 @@ void splitter_execute(char * csmessage, int *np, StringArray* retmessage, int *r
         word = s[k];
         std::hash<std::string> hasher;
         long hashed = hasher(word);
-        j = hashed % n;
+        j = abs(hashed % n);
 
         int len = snprintf(NULL, 0, "%d", j);
         *pRoute = j;
@@ -385,7 +385,7 @@ void* spout (void *arg, std::string ip, int port)
         s_sendmore(sender, std::to_string(j));
         //s_send(sender, message);
         sender.send(message);
-        usleep(10);
+        usleep(20);
     }
     	datafile.clear();
 	datafile.seekg(0);
@@ -435,6 +435,7 @@ void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> se
 
 	int route = 0;
         int *pRoute = &route;
+	//std::cout << msg.value << std::endl;
 	
         splitter_execute( (char *) msg.value.c_str(), nPointer, retmessage, retlen_a, retlen, pRoute);
 
@@ -497,9 +498,9 @@ void* count(void *arg, std::string receiverIP, int port)
 
 
 int func_main(int argc, char** argv){
-    const int count_threads = 3;
-    const int split_threads = 3;
-    const int spout_threads = 1;
+    const int count_threads = 6;
+    const int split_threads = 4;
+    const int spout_threads = 2;
 
     pthread_t spout_t[spout_threads];
     pthread_t split_t[split_threads];

@@ -181,7 +181,7 @@ void enclave_splitter_execute(char * csmessage, int *slength, char * tag, int *n
 	word = s[k];	
         std::hash<std::string> hasher;
         long hashed = hasher(word);
-        j = hashed % n;
+        j = abs(hashed % n);
 
         int len = snprintf(NULL, 0, "%d", j);
         *pRoute = j;
@@ -216,7 +216,7 @@ void enclave_count_execute(char* csmessage, int * slength, char * gcm_tag) {
         count_map[word] = 1;
     }
     std::map<std::string, int > ::iterator it;
-    //printf(word.c_str());
+    printf(word.c_str());
     // Printing the counts
     /*
     for (it = count_map.begin(); it != count_map.end(); it++) {
