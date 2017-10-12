@@ -9,6 +9,7 @@ Run split bolt using
     ./app splitter <split_id>
 
 Run count bolt using
+
     ./app count <count_id> <countIP> <countPort>
 
 
