@@ -12,6 +12,7 @@
 
 #endif	/* UTILS_HPP */
 #include "zmq.hpp"
+#define MAX_TUPLE_LEN 100
 struct Arguments{
     const char * ip; 
     int id;

@@ -59,6 +59,7 @@
 
 #include <boost/algorithm/string.hpp>
 
+
 cbuffer_t buffer;
 cbuffer_t *p1 = &buffer;
 cbuffer_t **p = &p1;
@@ -302,12 +303,12 @@ void* spout (void *arg, std::string ip, int port)
         //ptsentence = "Hark. They are speaking";
 	std::cout << ptsentence << "  "<<  ptsentence.length()<<std::endl;
         unsigned char gcm_ct [ptsentence.length()];
-        uint8_t gcm_tag [16];
+        uint8_t gcm_tag [GCM_TAG_LEN];
 
         encrypt(strdup(ptsentence.c_str()), ptsentence.length(), gcm_ct, gcm_tag);
 	std::string ctsentence((char *)gcm_ct, (int)ptsentence.length());
 //	std::cout << ctsentence.length() << std::endl;
-        std::string mac((char*) gcm_tag, 16);
+        std::string mac((char*) gcm_tag, GCM_TAG_LEN);
 
 //	std::cout << ctsentence << std::endl;
 //	std::cout << mac << std::endl;
@@ -398,7 +399,7 @@ void* splitter(void *arg, std::vector<std::string> senderIP, std::vector<int> se
         for(it = msg_buffer.begin(), it1 = mac_buffer.begin(); it != msg_buffer.end(); ++it, ++it1) {
         std::string val = *it;
         std::string tag = *it1;
-	char ct [100];
+	char ct [MAX_TUPLE_LEN];
 	int ctLength = val.length();
 	std::copy(val.begin(), val.end(), ct);
 	
@@ -455,7 +456,7 @@ void* count(void *arg, std::string receiverIP, int port)
 
 	std::vector<std::string> msg_buffer = msg.value;
         std::vector<std::string> mac_buffer = msg.gcm_tag;
-	char ct[30];
+	char ct[MAX_WORD_LEN];
         
         for(int i=0; i< msg_buffer.size(); i++){	
         std::string m = msg_buffer.back();
